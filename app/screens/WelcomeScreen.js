@@ -1,22 +1,16 @@
-import React, {useEffect,useState} from 'react';
-import {StyleSheet,View,Text,Image,SafeAreaView,ScrollView,TextInput,Button } from 'react-native';
-import {selectCounter,counterChange,fetchFilms,selectFilms} from "../features/filmSlice/filmSlice";
+import React, {useState} from 'react';
+import {StyleSheet,View,Text,SafeAreaView,ScrollView,TextInput,TouchableOpacity } from 'react-native';
+import {selectCounter,fetchFilms,selectFilms} from "../features/filmSlice/filmSlice";
 import {useSelector, useDispatch} from "react-redux";
 import Constants from 'expo-constants';
+import FilmItem from "../components/FilmItem";
 
-const url ="https://image.tmdb.org/t/p/w185_and_h278_bestv2";
-const Item = ({ original_title,index,poster_path }) => (
-            <View key={index} style={{height:300}}>
-                <Image style={{width:"100%",height:150}} resizeMode="contain" source={{uri: url + poster_path}}></Image>
-                <Text>{original_title}</Text>
-            </View>
-  );
 
 function WelcomeScreen() {
     const dispatch = useDispatch();
     const counter = useSelector(selectCounter);
 
-    const [value, onChangeText] = useState('Useless Placeholder');
+    const [value, onChangeText] = useState('Find Film');
     
     function btnHandler(){
         dispatch(fetchFilms(value));
@@ -25,13 +19,20 @@ function WelcomeScreen() {
     return (
         <SafeAreaView style={styles.container}>
         <ScrollView style={styles.scrollView}>
-            <TextInput  style={{ width:"30%",height: 40, borderColor: 'gray', borderWidth: 1, backgroundColor:'white'}}
+            <Text style={{fontSize:40,alignSelf:"center"}}>Find some films!</Text>
+            <View style={{flexDirection:"row",alignItems: 'center', justifyContent: 'center',}}>
+            <TextInput  style={{height: 40, borderColor: 'gray', borderWidth: 1, backgroundColor:'white',flex:0.3}}
             onChangeText={text => onChangeText(text)}
             value={value}/>
-            <Button title="Accept" onPress={btnHandler}/>
-            {films.map((film,index) => (<Item original_title={film.original_title} index={index} poster_path={film.poster_path} />))}
-        
-            
+            <TouchableOpacity style={{ height: 40, flex:0.3,alignSelf:"center",backgroundColor:"#1e3745",  alignItems: 'center',
+      justifyContent: 'center', }} onPress={btnHandler}>
+                <Text style={{fontSize:22}}>Accept</Text>
+            </TouchableOpacity>
+            </View>
+            <View style={{marginTop:50}}>
+                {films.length>0?films.map((film,index) => (<FilmItem original_title={film.original_title} index={index} poster_path={film.poster_path} release_date={film.release_date} vote_average={film.vote_average} />))
+                :<Text style={{alignSelf:"center",fontSize:30}}>Film not found</Text>}
+            </View>
             </ScrollView>
         </SafeAreaView>
     );
@@ -41,12 +42,16 @@ const styles = StyleSheet.create({
     container: {
       width:"100%",
       marginTop: Constants.statusBarHeight,
+      flex:1,
       alignItems: 'center',
       justifyContent: 'center',
     },
     scrollView: {
     width:"100%",
     },
+    Button:{
+        width:50,
+    }
   });
 
 export default WelcomeScreen;
