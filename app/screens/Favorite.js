@@ -11,7 +11,7 @@ import FilmItem from "../components/FilmItem";
 const Favorite = () => {
     const favoriteFilms = useSelector(selectFavoriteFilms);
     return (
-        <View style={{flex:1}}>
+        <View style={{flex:1,marginTop:20}}>
             {favoriteFilms && Array.isArray(favoriteFilms)?(favoriteFilms.map((favoriteFilm,index) => (<View key={index}><FilmItem index={index} film={favoriteFilm} add={false}/></View>))):null}
         </View>
     );

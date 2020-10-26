@@ -11,14 +11,14 @@ import Slider from '@react-native-community/slider';
 function WelcomeScreen() {
     const dispatch = useDispatch();
     const [value, onChangeText] = useState('Harry');
-    const [showFilms, changeShowFilms] = useState(true);
+    const [showFilms, changeShowFilms] = useState(false);
     const [sliderValue,onSliderValueChange] = useState(120);
 
     function onChangeHandler(text){
-        onChangeText(text);  
+        onChangeText(text);
     }
     function btnHandler(){
-        
+        changeShowFilms(true)
         dispatch(resetFilmInfo());
         dispatch(fetchFilms(value));
     }
@@ -30,8 +30,8 @@ function WelcomeScreen() {
             value={value}
             placeholder="Find movie"
             />
-                <Button style={{backgroundColor:"#22d1ee",borderColor:"#3d5af1",borderWidth:2,marginBottom:10}} onPress={btnHandler}>Find</Button>
-                <Text style={{fontSize:20,alignSelf:"center",marginBottom:15}}>Filters</Text>
+                
+                <Text style={{fontSize:20,alignSelf:"center",marginBottom:15,marginTop:15}}>Filters</Text>
                 <Text style={{alignSelf:"center",marginBottom:10}}>Movie length greater than {sliderValue} minutes</Text>
                 <Slider
                     value={sliderValue}
@@ -41,9 +41,12 @@ function WelcomeScreen() {
                     step={1}
                     thumbTintColor="black"
                  />
+                 <View style={{flexDirection: 'row',justifyContent: 'space-between',alignSelf:"center"}}>
+                 <Button style={{backgroundColor:"#22d1ee",borderColor:"#3d5af1",borderWidth:2,marginBottom:10}} onPress={btnHandler}>Find</Button>
+                 </View>
             <View style={{marginTop:50}}>
-                {films.length>0 && showFilms ?films.map((film,index) => (film.runtime>sliderValue?<View key={index}><FilmItem index={index} film={film} add={true}/></View>:null))
-                :<Text style={{alignSelf:"center",fontSize:30}}>Film not found</Text>}
+                {(films.length>0 ?films.map((film,index) => (film.runtime>sliderValue?<View key={index}><FilmItem index={index} film={film} add={true}/></View>:null))
+                :showFilms?<Text style={{alignSelf:"center",fontSize:30}}>Film not found</Text>:null)}
             </View>
         </View>
     );

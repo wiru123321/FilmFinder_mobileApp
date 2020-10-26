@@ -1,11 +1,12 @@
 import React,{useEffect} from 'react';
-import { StyleSheet, Dimensions,ScrollView} from 'react-native';
-import { TabView, SceneMap } from 'react-native-tab-view';
+import { StyleSheet, Dimensions} from 'react-native';
+import { TabView, SceneMap,TabBar } from 'react-native-tab-view';
 import Favorite from "../screens/Favorite";
 import {useDispatch, useSelector} from 'react-redux';
 import WelcomeScreen from "../screens/WelcomeScreen";
 import MostRated from "../screens/MostRated";
-import {fetchTopRatedFilms,fetchGenres,selectGenres} from "../features/filmSlice/filmSlice";;
+import {fetchGenres,selectGenres,selectFavoriteFilms} from "../features/filmSlice/filmSlice";;
+import { Badge  } from 'react-native-elements'
 const initialLayout = { width: Dimensions.get('window').width };
 
 export default function TabViewExample() {
@@ -22,10 +23,19 @@ export default function TabViewExample() {
     third: MostRated,
   });
   const selectedGenre = useSelector(selectGenres);
+  const selectedFavFilms = useSelector(selectFavoriteFilms);
   const dispatch = useDispatch();
   useEffect(()=>{
     dispatch(fetchGenres());
   },[])
+
+  const getTabBarBadge = (props) => {
+    const {route} = props
+
+      if (route.key === 'second') {
+       return <Badge value={selectedFavFilms.length==0 ? "0" : selectedFavFilms.length} status="error" />
+}
+}
 
   return (
     <TabView
@@ -33,7 +43,15 @@ export default function TabViewExample() {
       renderScene={renderScene}
       onIndexChange={setIndex}
       initialLayout={initialLayout}
-    />
+      renderTabBar={props =>
+        <TabBar
+            {...props}
+            indicatorStyle={{backgroundColor: 'red'}}
+            renderBadge={(props) =>getTabBarBadge(props)}
+        />
+      }
+      tabBarPosition={'top'}
+   />
   );
 }
 

@@ -10,8 +10,11 @@ const FilmItem = ({ film,index,add }) => {
         <View style={{height:300,flexDirection:"row"}}>
             {film.poster_path ?<Image style={{flex:0.6}} resizeMode="contain" source={{uri: url + film.poster_path}}/>:<Text style={{flex:0.6, alignSelf:"center",}}>Image not found</Text>}
         <View style={{flex:0.4,flexDirection:"column",alignItems: 'center'}} key={index}>
-           <Text style={{textAlign:"center",marginBottom:10}}>{film.original_title}</Text>
+           <Text style={{textAlign:"center",marginBottom:10,padding:15}}>{film.original_title}</Text>
+           <Text style={{textAlign:"center",marginBottom:10,padding:5}}>{film.production_companies.length >0 ? film.production_companies[0].name: null}</Text>
            <Text style={{textAlign:"center",marginBottom:10}}>{film.runtime} min</Text>
+           <Text style={{textAlign:"center",marginBottom:10}}>{film.budget}$</Text>
+           
            <MoreInfoModal index={index} film={film} add={add}/>
         </View>
     </View>
