@@ -1,40 +1,51 @@
 import React, {useState} from 'react';
-import {StyleSheet,View,Text,SafeAreaView,ScrollView,TextInput,TouchableOpacity } from 'react-native';
-import {selectCounter,fetchFilms,selectFilms} from "../features/filmSlice/filmSlice";
+import {StyleSheet,View,Text  } from 'react-native';
+import {fetchFilms,selectFilmInfo,resetFilmInfo} from "../features/filmSlice/filmSlice";
 import {useSelector, useDispatch} from "react-redux";
 import Constants from 'expo-constants';
 import FilmItem from "../components/FilmItem";
-
+import { SearchBar} from 'react-native-elements';
+import { Button } from 'react-native-paper';
+import Slider from '@react-native-community/slider';
 
 function WelcomeScreen() {
     const dispatch = useDispatch();
-    const counter = useSelector(selectCounter);
+    const [value, onChangeText] = useState('Harry');
+    const [showFilms, changeShowFilms] = useState(true);
+    const [sliderValue,onSliderValueChange] = useState(120);
 
-    const [value, onChangeText] = useState('Find Film');
-    
+    function onChangeHandler(text){
+        onChangeText(text);  
+    }
     function btnHandler(){
+        
+        dispatch(resetFilmInfo());
         dispatch(fetchFilms(value));
     }
-    const films = useSelector(selectFilms);
+    const films = useSelector(selectFilmInfo);
     return (
-        <SafeAreaView style={styles.container}>
-        <ScrollView style={styles.scrollView}>
-            <Text style={{fontSize:40,alignSelf:"center"}}>Find some films!</Text>
-            <View style={{flexDirection:"row",alignItems: 'center', justifyContent: 'center',}}>
-            <TextInput  style={{height: 40, borderColor: 'gray', borderWidth: 1, backgroundColor:'white',flex:0.3}}
-            onChangeText={text => onChangeText(text)}
-            value={value}/>
-            <TouchableOpacity style={{ height: 40, flex:0.3,alignSelf:"center",backgroundColor:"#1e3745",  alignItems: 'center',
-      justifyContent: 'center', }} onPress={btnHandler}>
-                <Text style={{fontSize:22}}>Accept</Text>
-            </TouchableOpacity>
-            </View>
+        <View style={{flex:1}}> 
+                <SearchBar
+            onChangeText={text => onChangeHandler(text)}
+            value={value}
+            placeholder="Find movie"
+            />
+                <Button style={{backgroundColor:"#22d1ee",borderColor:"#3d5af1",borderWidth:2,marginBottom:10}} onPress={btnHandler}>Find</Button>
+                <Text style={{fontSize:20,alignSelf:"center",marginBottom:15}}>Filters</Text>
+                <Text style={{alignSelf:"center",marginBottom:10}}>Movie length greater than {sliderValue} minutes</Text>
+                <Slider
+                    value={sliderValue}
+                     onValueChange={(value) => onSliderValueChange(value)}
+                     maximumValue={400}
+                    minimumValue={0}
+                    step={1}
+                    thumbTintColor="black"
+                 />
             <View style={{marginTop:50}}>
-                {films.length>0?films.map((film,index) => (<FilmItem original_title={film.original_title} index={index} poster_path={film.poster_path} release_date={film.release_date} vote_average={film.vote_average} />))
+                {films.length>0 && showFilms ?films.map((film,index) => (film.runtime>sliderValue?<View key={index}><FilmItem index={index} film={film} add={true}/></View>:null))
                 :<Text style={{alignSelf:"center",fontSize:30}}>Film not found</Text>}
             </View>
-            </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }
 
@@ -49,9 +60,7 @@ const styles = StyleSheet.create({
     scrollView: {
     width:"100%",
     },
-    Button:{
-        width:50,
-    }
+
   });
 
 export default WelcomeScreen;
