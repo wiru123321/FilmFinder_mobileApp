@@ -1,7 +1,6 @@
-import { red } from '@material-ui/core/colors';
 import React from 'react';
 import {
-    Text, View,
+    View,
   } from "react-native"
 import {useSelector} from "react-redux";
 import {selectFavoriteFilms} from "../features/filmSlice/filmSlice";

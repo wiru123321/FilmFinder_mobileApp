@@ -7,8 +7,8 @@ import {
   TouchableHighlight,
   View
 } from "react-native";
-import {useSelector, useDispatch} from "react-redux";
-import {selectGenres,fetchFilmsInfo,setFavoriteFilms,removeFavoriteFilms} from "../features/filmSlice/filmSlice";
+import {useDispatch} from "react-redux";
+import {setFavoriteFilms} from "../features/filmSlice/filmSlice";
 
 const MoreInfoModal = ({ film,index,add }) => {
   const [modalVisible, setModalVisible] = useState(false);

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import {Picker} from "@react-native-community/picker"
 import { useDispatch, useSelector } from "react-redux";
-import {selectGenres,setSelectedGenres,fetchTopRatedFilms,resetTopRated,fetchFilms,resetFilmInfo} from "../../features/filmSlice/filmSlice";
+import {selectGenres,setSelectedGenres,fetchTopRatedFilms,resetTopRated} from "../../features/filmSlice/filmSlice";
 
 const GenresPicker = ({whatFilter}) => {
     const dispatch = useDispatch();
